@@ -1,4 +1,5 @@
 use rppal::gpio::Gpio;
+use rppal::i2c::I2c;
 use std::{thread, time::Duration};
 use std::fs::File;
 use std::io::BufReader;
@@ -8,7 +9,8 @@ use rodio::{source::{SamplesConverter, Source}, Decoder, OutputStream, Sink};
 mod led;
 use led::run_leds;
 
-
+mod pca9685;
+use pca9685::PCA9685;
 
 fn main(){
 
@@ -16,12 +18,22 @@ fn main(){
         thread::spawn(||run_leds()),
         thread::spawn(||play_music()),
         thread::spawn(||poll_gpio_pin()),
+        thread::spawn(||run_i2c()),
     ];
     for thread in threads {
         let _ = thread.join();
     }
 }
 
+fn run_i2c(){
+    let mut p = PCA9685::new(0x40, 1).unwrap();
+    loop {
+        p.set_servo(0, 0.7).unwrap();
+        thread::sleep(Duration::from_millis(2000));
+        p.set_servo(0, 0.0).unwrap();
+        thread::sleep(Duration::from_millis(2500));
+    }
+}
 
 fn play_music() {
     // Get an output stream handle to the default physical sound device
@@ -44,8 +56,7 @@ fn poll_gpio_pin(){
         .into_input();
     loop {
         let level = pin.read();
-        println!("Motion detected: {:?}", level == rppal::gpio::Level::High);
-
+        //println!("Motion detected: {:?}", level == rppal::gpio::Level::High);
         thread::sleep(Duration::from_millis(200));
     }
 }

@@ -9,6 +9,8 @@ Files used to control raspberry pi in sculpture
 - install `alsa`
 - `raspi-config`
   - enable SPI
+  - enable I2C
+    - sudo raspi-config, or by manually adding dtparam=i2c_arm=on to /boot/firmware/config.txt.
 - install pulse audio bluetooth `sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
   - `sudo reboot`
   - `bluetoothctl` (See guide https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb)
