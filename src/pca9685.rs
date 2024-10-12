@@ -40,28 +40,25 @@ pub struct PCA9685 {
 #[repr(u8)]
 pub enum ServoNumber {
     S0 = 0,
-    S1 = 1,
-    S2 = 2,
-    S3 = 3,
-    S4 = 4,
-    S5 = 5,
-    S6 = 6,
-    S7 = 7,
-    S8 = 8,
-    S9 = 9,
-    S10 = 10,
-    S11 = 11,
-    S12 = 12,
-    S13 = 13,
-    S14 = 14,
-    S15 = 15,
+    // S1 = 1,
+    // S2 = 2,
+    // S3 = 3,
+    // S4 = 4,
+    // S5 = 5,
+    // S6 = 6,
+    // S7 = 7,
+    // S8 = 8,
+    // S9 = 9,
+    // S10 = 10,
+    // S11 = 11,
+    // S12 = 12,
+    // S13 = 13,
+    // S14 = 14,
+    // S15 = 15,
 }
 
 pub enum ServoAction{
-    Position{
-        value:f32,
-        invert:bool
-    },
+    Position(f32),
     Coast
 }
 pub struct ServoInstruction{
@@ -113,14 +110,16 @@ impl PCA9685 {
         let ServoInstruction{servo_number, action} = instruction;
 
         match action {
-            ServoAction::Position { value, invert }=>{
-                let mut value = value.clamp(0.0, 1.0);
-                if invert{
-                    value = 1.0 - value;
+            ServoAction::Position (position)=>{
+                if ! position.is_finite(){
+                    // nan or inf values will coast
+                    self.set_pwm_full_off(servo_number as u8)
+                }else{
+                    let position = position.clamp(0.0, 1.0);
+                    let pulse_length = 0.05 + 0.05 * position;
+                    let pulse = (pulse_length * 4096.0).round() as u16;
+                    self.set_pwm(servo_number as u8, 0, pulse)
                 }
-                let pulse_length = 0.05 + 0.05 * value;
-                let pulse = (pulse_length * 4096.0).round() as u16;
-                self.set_pwm(servo_number as u8, 0, pulse)
             }
             ServoAction::Coast=>self.set_pwm_full_off(servo_number as u8)
         }
