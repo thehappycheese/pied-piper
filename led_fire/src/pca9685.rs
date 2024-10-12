@@ -37,6 +37,38 @@ pub struct PCA9685 {
     device: I2c,
 }
 
+#[repr(u8)]
+pub enum ServoNumber {
+    S0 = 0,
+    S1 = 1,
+    S2 = 2,
+    S3 = 3,
+    S4 = 4,
+    S5 = 5,
+    S6 = 6,
+    S7 = 7,
+    S8 = 8,
+    S9 = 9,
+    S10 = 10,
+    S11 = 11,
+    S12 = 12,
+    S13 = 13,
+    S14 = 14,
+    S15 = 15,
+}
+
+pub enum ServoAction{
+    Position{
+        value:f32,
+        invert:bool
+    },
+    Coast
+}
+pub struct ServoInstruction{
+    pub servo_number:ServoNumber,
+    pub action:ServoAction
+}
+
 impl PCA9685 {
     pub fn new(address: u16, bus: u8) -> Result<Self, I2CError> {
         let mut device = I2c::with_bus(bus)?;
@@ -56,25 +88,41 @@ impl PCA9685 {
     }
 
     /// Sets the PWM signal for a specific channel.
-    /// This function is private.
     fn set_pwm(&mut self, channel: u8, on: u16, off: u16) -> Result<(), I2CError> {
         let base = REG_LED0_ON_L + 4 * channel;
-        self.device.write(&[base, (on & 0xFF) as u8])?;
-        self.device.write(&[base + 1, (on >> 8) as u8])?;
+        self.device.write(&[base    , (on &  0xFF) as u8])?;
+        self.device.write(&[base + 1, (on >>    8) as u8])?;
         self.device.write(&[base + 2, (off & 0xFF) as u8])?;
-        self.device.write(&[base + 3, (off >> 8) as u8])?;
+        self.device.write(&[base + 3, (off >>   8) as u8])?;
         Ok(())
     }
 
-    pub fn set_servo(&mut self, servo_number: u8, position: f32) -> Result<(), I2CError> {
-        assert!(servo_number < 16, "Servo number must be between 0 and 15");
-        assert!(
-            position >= 0.0 && position <= 1.0,
-            "Position must be between 0.0 and 1.0"
-        );
-        
-        let pulse_length = 0.05 + 0.05 * position;
-        let pulse = (pulse_length * 4096.0).round() as u16;
-        self.set_pwm(servo_number, 0, pulse)
+    /// Sets the PWM output to fully off for a specific channel (servo coasting).
+    fn set_pwm_full_off(&mut self, channel: u8) -> Result<(), I2CError> {
+        let base = REG_LED0_ON_L + 4 * channel;
+        self.device.write(&[base    , 0])?;
+        self.device.write(&[base + 1, 0])?;
+        self.device.write(&[base + 2, 0])?;
+        // Set the 4th bit (bit 4) of LEDn_OFF_H to 1 to turn the output fully off
+        self.device.write(&[base + 3, 1 << 4])?;
+        Ok(())
+    }
+
+    pub fn send(&mut self, instruction:ServoInstruction) -> Result<(), I2CError> {
+
+        let ServoInstruction{servo_number, action} = instruction;
+
+        match action {
+            ServoAction::Position { value, invert }=>{
+                let mut value = value.clamp(0.0, 1.0);
+                if invert{
+                    value = 1.0 - value;
+                }
+                let pulse_length = 0.05 + 0.05 * value;
+                let pulse = (pulse_length * 4096.0).round() as u16;
+                self.set_pwm(servo_number as u8, 0, pulse)
+            }
+            ServoAction::Coast=>self.set_pwm_full_off(servo_number as u8)
+        }
     }
 }
