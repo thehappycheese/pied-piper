@@ -7,4 +7,6 @@ edition = "2021"
 rand = "0.8.5"
 rodio = "0.19.0"
 rppal = "0.19.0"
+serde = {version="1.0.210", features=["derive"]}
+serde_json = "1.0.128"
 ws2818-rgb-led-spi-driver = "2.0.0"

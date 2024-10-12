@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::BufReader;
+use std::sync::Arc;
 use std::{
     sync::mpsc::{Receiver, RecvTimeoutError, Sender},
     time::Duration,
@@ -10,6 +11,9 @@ use rodio::{
     Decoder, OutputStream, Sink,
 };
 
+use crate::config::PiperConfig;
+
+#[derive(Debug)]
 pub enum MusicErrorType {
     NoOutputDevice,
     UnableToOpenFile,
@@ -36,7 +40,11 @@ enum MusicState {
     Stopped,
 }
 
-pub fn play_music(tx: Sender<MusicToMain>, rx: Receiver<MainToMusic>) {
+pub fn play_music(
+    tx: Sender<MusicToMain>,
+    rx: Receiver<MainToMusic>,
+    config:Arc<PiperConfig>,
+) {
     let mut state = MusicState::Stopped;
     // Try to secure an output stream
     let (_stream, stream_handle) = match OutputStream::try_default() {
@@ -57,7 +65,7 @@ pub fn play_music(tx: Sender<MusicToMain>, rx: Receiver<MainToMusic>) {
                 MusicState::Playing(sink) => {
                     if sink.empty() {
                         state = MusicState::Stopped;
-                        println!("Music Sink is empty");
+                        println!("Music Finished Playing");
                         tx.send(MusicToMain::StoppedPlaying).unwrap();
                     }
                 }
@@ -69,7 +77,7 @@ pub fn play_music(tx: Sender<MusicToMain>, rx: Receiver<MainToMusic>) {
                 MusicState::Stopped => {
                     // Load a sound from a file, using a path relative to Cargo.toml
                     // let file = match File::open("../music/pied piper 3.mp3"){
-                    let file = match File::open("../music/pied piper-short.mp3") {
+                    let file = match File::open(config.music_file_location.clone()) {
                         Ok(f) => f,
                         Err(_) => {
                             tx.send(MusicToMain::MusicError(MusicErrorType::UnableToOpenFile))
