@@ -103,10 +103,22 @@ Uninstall the service:
 sudo python service_uninstall.py
 ```
 
-## WS2812B LED Fire Effect
+## Wifi Setup
 
-uses SPI0 MOSI (Chip Pin 10? Not pin 10 on header.)
+For deployment it is likely useful if the pi can connect to a hotspot so that it can be serviced once deployed.
 
-Must be enabled using `raspi-config` > `interfaces` > `SPI` possibly requires a reboot to take effect.
 
-Hard coded for 10 LEDs
+```bash
+sudo wpa_cli scan
+sudo wpa_cli scan_results
+```
+
+```bash
+# find avaliable networks
+sudo nmcli device wifi rescan
+# list connected and available networks
+nmcli device wifi list
+
+# connect to a new network;
+ sudo nmcli device wifi connect "my-android-phone-hotspot" password "my-hotspot-password"
+```
