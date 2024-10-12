@@ -27,14 +27,14 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.4778115"
-     inkscape:cx="360.33012"
-     inkscape:cy="231.76163"
+     inkscape:cx="457.77151"
+     inkscape:cy="137.70362"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer4"
      showguides="true"
      showgrid="true">
     <inkscape:grid
@@ -1363,7 +1363,7 @@
        id="path35"
        transform="translate(-30.48,-27.94)" />
     <path
-       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#9f8332;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
        d="m 96.520001,78.739997 v 2.54 H 109.22 v -5.08"
        id="path37"
        transform="translate(-30.48,-27.94)" />
@@ -1373,7 +1373,7 @@
        id="path38"
        transform="translate(-30.48,-27.94)" />
     <path
-       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#5b5b5b;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+       style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#ca4b02;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
        d="m 91.440001,78.739997 v 7.62 H 114.3 v -10.16"
        id="path39"
        transform="translate(-30.48,-27.94)" />
