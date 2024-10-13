@@ -12,16 +12,13 @@ use crate::{
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct AlternatingSettings {
-    pub open_fraction: f32,
-    pub closed_fraction: f32,
+    
     pub open_pause_seconds: f32,
     pub closed_pause_seconds: f32,
 }
 impl Default for AlternatingSettings {
     fn default() -> Self {
         AlternatingSettings {
-            open_fraction: 1.0,
-            closed_fraction: 0.0,
             open_pause_seconds: 2.0,
             closed_pause_seconds: 3.0,
         }
@@ -31,9 +28,9 @@ impl Default for AlternatingSettings {
 #[derive(Debug)]
 pub enum MainToServo {
     Alternate(AlternatingSettings),
-    Neutral,
+    //Neutral,
     Close,
-    Open,
+    //Open,
     Coast,
 }
 
@@ -62,10 +59,7 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
             Ok(MainToServo::Alternate(settings)) => {
                 p.send(ServoInstruction {
                     servo_number: S0,
-                    action: Position {
-                        value: 0.0,
-                        invert: config.invert,
-                    },
+                    action: Position (config.open_fraction),
                 })
                 .unwrap();
                 state = State::Alternating(AlternatingState {
@@ -74,17 +68,17 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
                     is_open: true,
                 });
             }
-            Ok(MainToServo::Neutral) => {
-                p.send(ServoInstruction {
-                    servo_number: S0,
-                    action: Position {
-                        value: 0.5,
-                        invert: config.invert,
-                    },
-                })
-                .unwrap();
-                state = State::Polling;
-            }
+            // Ok(MainToServo::Neutral) => {
+            //     p.send(ServoInstruction {
+            //         servo_number: S0,
+            //         action: Position {
+            //             value: 0.5,
+            //             invert: config.invert,
+            //         },
+            //     })
+            //     .unwrap();
+            //     state = State::Polling;
+            // }
             Ok(MainToServo::Coast) => {
                 p.send(ServoInstruction {
                     servo_number: S0,
@@ -96,25 +90,22 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
             Ok(MainToServo::Close) => {
                 p.send(ServoInstruction {
                     servo_number: S0,
-                    action: Position {
-                        value: 0.0,
-                        invert: config.invert,
-                    },
+                    action: Position (config.closed_fraction),
                 })
                 .unwrap();
                 state = State::Polling;
             }
-            Ok(MainToServo::Open) => {
-                p.send(ServoInstruction {
-                    servo_number: S0,
-                    action: Position {
-                        value: 1.0,
-                        invert: config.invert,
-                    },
-                })
-                .unwrap();
-                state = State::Polling;
-            }
+            // Ok(MainToServo::Open) => {
+            //     p.send(ServoInstruction {
+            //         servo_number: S0,
+            //         action: Position {
+            //             value: 1.0,
+            //             invert: config.invert,
+            //         },
+            //     })
+            //     .unwrap();
+            //     state = State::Polling;
+            // }
             Err(RecvTimeoutError::Timeout) => {
                 match &mut state {
                     State::Alternating(AlternatingState {
@@ -132,16 +123,13 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
                             // Toggle servo position
                             *is_open = !*is_open;
                             let fraction = if *is_open {
-                                settings.open_fraction
+                                config.open_fraction
                             } else {
-                                settings.closed_fraction
+                                config.closed_fraction
                             };
                             p.send(ServoInstruction {
                                 servo_number: S0,
-                                action: Position {
-                                    value: fraction,
-                                    invert: config.invert,
-                                },
+                                action: Position (fraction),
                             })
                             .unwrap();
                             *last_toggle = now;

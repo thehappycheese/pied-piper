@@ -16,29 +16,109 @@ It is expected that the PI is already configured to automatically connect with a
 
 A 1 second low-volume humming sound is played once every 120 seconds to keep the speaker awake.
 
-## Dependencies
+## Setup
 
-- install `rust` 
-- install `alsa`
-- `sudo raspi-config`
-  - enable SPI
-  - enable I2C
-    - or manually adding `dtparam=i2c_arm=on` to `/boot/firmware/config.txt`.
-- install pulse audio bluetooth `sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
-  - `sudo reboot`
-  - `bluetoothctl` (See guide https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb)
-    - power on
-    - agent on
-    - scan on
-      - wait for the device to be discovered, note it's address (you can then use tab for auto-completion)
-    - pair <dev>
-    - trust <dev>
-    - connect <dev>
 
-## WS2812B LED Fire Effect
 
-uses SPI0 MOSI (Chip Pin 10? Not pin 10 on header.)
+1. install `alsa`
 
-Must be enabled using `raspi-config` > `interfaces` > `SPI` possibly requires a reboot to take effect.
+```bash
+sudo apt update
+sudo apt install alsa-utils
+sudo apt install libasound2-dev
+```
 
-Hard coded for 10 LEDs
+2. Enable both SPI and I2C
+   - using `sudo raspi-config`
+   - or manually by editing `/boot/firmware/config.txt` by adding ur uncommenting (removing the `#`)
+     - `dtparam=i2c_arm=on` and
+     - `dtparam=spi=on`
+   - May need `sudo reboot` to take effect
+3. **If using bluetooth**: install pulse audio bluetooth `sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
+  - May need `sudo reboot` to take effect
+  - Pair with device (See guide https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb)
+    - `bluetoothctl`
+    - `power on`
+    - `agent on`
+    - `scan on`
+      - Wait for the device to be discovered
+      - Note it's address; the address should look like `6E:E9:B4:0D:0F:18`
+    - `pair <device>`
+      - Replace `<device>` with the address noted above
+      - **you only need to type the first few characters!**, then press tab to auto-complete the rest.
+    - `trust <device>`
+      - Enables auto-connection
+    - `connect <device>`
+      - This should happen automatically on startup in future
+
+
+4. Install git
+
+```bash
+sudo apt-get install git
+```
+
+5. clone this respository, and change your terminal's current working directory into the repo:
+
+```bash
+git clone https://github.com/thehappycheese/pied-piper
+cd pied-piper
+```
+
+6. Install `rust`
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+7. Build this project
+
+```bash
+cargo build --release
+```
+
+8. Install this project so that it runs on startup
+
+```bash
+sudo python service_install.py
+```
+
+9. If something goes wrong, there is are scripts to check the logs of the running service, and a script to uninstall it:
+
+Check logs of running service:
+
+```bash
+sudo python service_check.py
+```
+
+Restart running service:
+
+```bash
+sudo python service_restart.py
+```
+
+Uninstall the service:
+
+```bash
+sudo python service_uninstall.py
+```
+
+## Wifi Setup
+
+For deployment it is likely useful if the pi can connect to a hotspot so that it can be serviced once deployed.
+
+
+```bash
+sudo wpa_cli scan
+sudo wpa_cli scan_results
+```
+
+```bash
+# find avaliable networks
+sudo nmcli device wifi rescan
+# list connected and available networks
+nmcli device wifi list
+
+# connect to a new network;
+ sudo nmcli device wifi connect "my-android-phone-hotspot" password "my-hotspot-password"
+```

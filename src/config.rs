@@ -9,7 +9,8 @@ use std::path::Path;
 pub struct PiperConfig {
     pub music_file_location: String,
     pub alternation_settings: AlternatingSettings,
-    pub invert: bool,
+    pub open_fraction: f32,
+    pub closed_fraction: f32,
     pub idle_trigger_minutes: f32, // in minutes
 }
 
@@ -18,7 +19,8 @@ impl Default for PiperConfig {
         PiperConfig{
             music_file_location:"./music/pied piper 3.mp3".to_owned(),
             alternation_settings: AlternatingSettings::default(),
-            invert:false,
+            open_fraction: 1.0,
+            closed_fraction: 0.0,
             idle_trigger_minutes: 10.0
         }
     }
