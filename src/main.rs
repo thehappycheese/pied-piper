@@ -69,6 +69,9 @@ fn main() {
             None=>{
             }
         }
+        for music_event in rx_music.try_iter() {
+            println!("MAIN THREAD IDLE: DISCARDING MESSAGE FROM MUSIC THREAD {music_event:?}")
+        }
     }
 }
 
@@ -89,11 +92,15 @@ fn performance(
                 tx_servo.send(MainToServo::Close).unwrap();
                 thread::sleep(Duration::from_secs_f32(1.0));
                 tx_servo.send(MainToServo::Coast).unwrap();
-                break
+                break;
             }
             Ok(MusicToMain::MusicError(error_type))=>{
                 println!("Could not play Music due to error type: {error_type:?}");
-                break
+                break;
+            }
+            Ok(MusicToMain::GotOutputDevice)=>{
+                println!("PERFORMANCE: MUSIC THREAD GOT OUTPUT DEVICE");
+                continue;
             }
             Err(RecvTimeoutError::Timeout)=>continue,
             Err(RecvTimeoutError::Disconnected)=>break,

@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::BufReader;
 use std::sync::Arc;
+use std::thread;
 use std::{
     sync::mpsc::{Receiver, RecvTimeoutError, Sender},
     time::Duration,
@@ -21,9 +22,11 @@ pub enum MusicErrorType {
     UnknownError,
 }
 
+#[derive(Debug)]
 pub enum MusicToMain {
     StartedPlaying,
     StoppedPlaying,
+    GotOutputDevice,
     MusicError(MusicErrorType),
 }
 pub enum MainToMusic {
@@ -50,16 +53,20 @@ pub fn play_music(
 
     let x;
     loop{
+        println!("MUSIC THREAD: WILL TRY TO GET AUDIO DEVICE NOW:");
         match OutputStream::try_default() {
             Ok(os) => {
                 x=os;
+                println!("MUSIC THREAD: GOT AUDIO DEVICE NOW:");
+                tx.send(MusicToMain::GotOutputDevice).unwrap();
                 break;
             },
             Err(_) => {
+                println!("MUSIC THREAD: FAILED TO GET AUDIO DEVICE");
                 tx.send(MusicToMain::MusicError(MusicErrorType::NoOutputDevice)).unwrap();
-                // empty the queue, ignore all messages
                 let _junk:Vec<_> = rx.try_iter().collect();
-                return;
+                thread::sleep(Duration::from_secs(1));
+                continue;
             }
         };
     }
