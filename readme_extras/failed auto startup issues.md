@@ -146,3 +146,26 @@ replace `pi` in the text below with your username:
 ExecStart=
 ExecStart=-/sbin/agetty --autologin pi --noclear %I $TERM
 ```
+
+## Auto-login (I think this worked?)
+
+To make bluetooth and pulse audio work on power-on, we will configure getty to make the system autologin;
+
+```bash
+sudo raspi-config
+```
+
+Select
+- `System Options`
+- `Boot / Auto Login` 
+- `B2 Text Console, automatically logged in as...`
+
+You can check it worked as follows;
+```
+cat /etc/systemd/system/getty@tty1.service.d/autologin.conf 
+```
+```ini
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin nick --noclear %I $TERM
+```
