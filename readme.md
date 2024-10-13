@@ -5,10 +5,12 @@ Files used to control raspberry pi in sculpture
 - [1. Hardware Setup](#1-hardware-setup)
 - [2. Raspberry Pi Setup](#2-raspberry-pi-setup)
   - [2.1. Bluetooth Speaker or Other Default Audio Device](#21-bluetooth-speaker-or-other-default-audio-device)
-  - [2.2. Software Installations](#22-software-installations)
-  - [2.3. Building and Installing The Code in this Repo](#23-building-and-installing-the-code-in-this-repo)
-  - [2.4. Install using `systemd` to make it go on startup](#24-install-using-systemd-to-make-it-go-on-startup)
-  - [2.5. Auto-login](#25-auto-login)
+    - [2.1.1. Detailed Bluetooth Setup](#211-detailed-bluetooth-setup)
+    - [2.1.2. Bluetooth `make_autoconnect.py`](#212-bluetooth-make_autoconnectpy)
+  - [2.2. Install the ALSA Audio Development Kit](#22-install-the-alsa-audio-development-kit)
+  - [2.3. `raspi-config`](#23-raspi-config)
+  - [2.4. Building and Installing The Code in this Repo](#24-building-and-installing-the-code-in-this-repo)
+  - [2.5. Install using `systemd` to make it go on startup](#25-install-using-systemd-to-make-it-go-on-startup)
 - [3. Wifi Setup](#3-wifi-setup)
 
 
@@ -34,9 +36,11 @@ The easiest option I have found was a bluetooth speaker. Note the following:
   second low-volume humming sound once every 120 seconds to keep the speaker
   awake.
 - The one downside to this setup is that if the pi is power-cycled, the
-  bluetooth speaker may not attempt to reconnect. To complete the connection,
-  the bluetooth speaker also had to be power-cycled.
+  bluetooth speaker may not attempt to reconnect. See further below instructions
+  for ` bluetooth/make_auto_connect.py` which is designed to help with this
+  issue.
 
+#### 2.1.1. Detailed Bluetooth Setup
 To get Bluetooth set up, we will install pulse audio and the bluetooth module:
 
 ```bash
@@ -51,7 +55,7 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
   - `agent on`
   - `scan on`
     - Wait for the device to be discovered
-    - Note it's address; the address should look like `6E:E9:B4:0D:0F:18`
+    - Note it's address; the address should look like `4E:E9:B4:0A:0F:1F`
   - `pair <device>`
     - Replace `<device>` with the address noted above
     - **you only need to type the first few characters!**, then press tab to
@@ -61,28 +65,55 @@ sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
   - `connect <device>`
     - This should happen automatically on startup in future
 
+#### 2.1.2. Bluetooth `make_autoconnect.py`
 
-### 2.2. Software Installations
+To get bluetooth to connect even more reliably there is a python script that
+sets up a startup service that tries to force reconnection every 10 seconds if
+the connection is down.
 
-Install the ALSA (Advanced Linux Sound Architecture) development kit. 
+To set up this service use the command:
 
-1. install `alsa`
+```bash
+sudo python bluetooth/make_auto_connect.py --device 4E:E9:B4:0A:0F:1F
+```
+
+There is an `--uninstall` and `--log` command line option to remove or check the
+logs for this service.
+
+
+### 2.2. Install the ALSA Audio Development Kit
+
+Install the ALSA (Advanced Linux Sound Architecture) development kit which is
+needed to play music using the rust `rodio` crate.
 
 ```bash
 sudo apt update
-sudo apt install alsa-utils
 sudo apt install libasound2-dev
 ```
 
-2. Enable both SPI and I2C
-   - using `sudo raspi-config`
-   - or manually by editing `/boot/firmware/config.txt` by adding ur
-     uncommenting (removing the `#`)
-     - `dtparam=i2c_arm=on` and
-     - `dtparam=spi=on`
-   - May need `sudo reboot` to take effect
+> Note: `alsa-utils` may also be needed? I don't think so...
 
-### 2.3. Building and Installing The Code in this Repo
+### 2.3. `raspi-config`
+
+```bash
+sudo raspi-config
+```
+
+Enable the following options in the menu.
+
+- `Interface Options`
+  - `SPI` - Enable
+  - `I2C` - Enable
+- `System Options`
+  - `Boot / Auto Login`
+    - `Text Console, automatically logged in as...` - Enable
+
+
+I2C is used to connect with the servo. SPI is needed to drive the LED lights.
+
+The auto-login is needed to get bluetooth and audio stuff working without a user actively logged in to the device.
+
+### 2.4. Building and Installing The Code in this Repo
 
 4. Install git
 
@@ -110,7 +141,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 cargo build --release
 ```
 
-### 2.4. Install using `systemd` to make it go on startup
+### 2.5. Install using `systemd` to make it go on startup
 
 8. Install this project so that it runs on startup
 
@@ -139,57 +170,30 @@ Uninstall the service:
 sudo python service_uninstall.py
 ```
 
-
-### 2.5. Auto-login
-
-To make bluetooth and pulse audio work on power-on, we will configure auto-login:
-
-```bash
-sudo raspi-config
-```
-
-Select
-- `System Options`
-- `Boot / Auto Login` 
-- `B2 Text Console, automatically logged in as...`
-
-
-To get bluetooth to repair the connection with the speaker more robustly,
-
-```bash
-sudo nano /etc/bluetooth/main.conf
-```
-
-Find and set the lines
-
-```conf
-AlwaysPairable = true
-FastConnectable = true
-JustWorksRepairing = always
-```
-
-Then run
-```bash
-sudo systemctl restart bluetooth
-```
-
 ## 3. Wifi Setup
 
 For deployment it is likely useful if the pi can connect to a hotspot so that it
 can be serviced once deployed.
-
 
 ```bash
 sudo wpa_cli scan
 sudo wpa_cli scan_results
 ```
 
-```bash
-# find avaliable networks
-sudo nmcli device wifi rescan
-# list connected and available networks
-nmcli device wifi list
+Tell the agent to look for available networks
 
-# connect to a new network;
+```bash
+sudo nmcli device wifi rescan
+```
+
+List results, connected and available networks;
+
+```bash
+nmcli device wifi list
+```
+
+connect to a new network;
+
+```bash
  sudo nmcli device wifi connect "my-android-phone-hotspot" password "my-hotspot-password"
 ```

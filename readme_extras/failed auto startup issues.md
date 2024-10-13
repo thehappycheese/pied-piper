@@ -147,6 +147,45 @@ ExecStart=
 ExecStart=-/sbin/agetty --autologin pi --noclear %I $TERM
 ```
 
+## Bluetooth settings that weren't needed
+
+To get bluetooth to repair the connection with the speaker more robustly,
+
+```bash
+sudo nano /etc/bluetooth/main.conf
+```
+
+Find and set the lines
+
+```conf
+AlwaysPairable = true
+FastConnectable = true
+JustWorksRepairing = always
+```
+
+Then run
+```bash
+sudo systemctl restart bluetooth
+```
+
+## bad version of raspi-config setu[
+
+`raspi-config`
+
+Enable both SPI and I2C
+- using `sudo raspi-config`
+  - 
+  - Enable SPI
+  - Enable I2C
+  - 
+- or manually by editing `/boot/firmware/config.txt` by adding ur
+  uncommenting (removing the `#`)
+  - `dtparam=i2c_arm=on` and
+  - `dtparam=spi=on`
+- May need `sudo reboot` to take effect
+]
+
+
 ## Auto-login (I think this worked?)
 
 To make bluetooth and pulse audio work on power-on, we will configure getty to make the system autologin;
