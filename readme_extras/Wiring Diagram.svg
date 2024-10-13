@@ -26,9 +26,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="1.4778115"
-     inkscape:cx="457.77151"
-     inkscape:cy="137.70362"
+     inkscape:zoom="2.0899411"
+     inkscape:cx="243.78678"
+     inkscape:cy="158.13843"
      inkscape:window-width="2560"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
@@ -53,7 +53,7 @@
        gridanglex="30"
        gridanglez="30"
        visible="true"
-       enabled="false" />
+       enabled="true" />
   </sodipodi:namedview>
   <defs
      id="defs1">
@@ -444,12 +444,12 @@
       <rect
          style="fill:#333ec6;fill-opacity:1;stroke:none;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round"
          id="rect10"
-         width="24.506571"
+         width="29.731218"
          height="69.639038"
-         x="55.574837"
+         x="50.350189"
          y="29.420952"
          ry="1.0127878"
-         rx="1.0127877" />
+         rx="1.0127878" />
       <g
          id="g12"
          transform="rotate(-90,68.220663,98.461084)">
@@ -857,8 +857,8 @@
          id="rect14"
          width="8.6247568"
          height="10.159999"
-         x="58.015274"
-         y="58.497864"
+         x="50.862461"
+         y="58.295807"
          ry="1.0127877"
          rx="1.0127877" />
       <g
@@ -940,25 +940,25 @@
       <text
          xml:space="preserve"
          style="font-weight:900;font-size:2.22394px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial Heavy';text-decoration-color:#000000;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.693998;stroke-linecap:round;stroke-linejoin:round"
-         x="59.755207"
-         y="61.162056"
+         x="52.602394"
+         y="60.959999"
          id="text21-1"><tspan
            sodipodi:role="line"
            id="tspan21-4"
            style="fill:#f9f9f9;stroke-width:0.693998"
-           x="59.755207"
-           y="61.162056">GND</tspan></text>
+           x="52.602394"
+           y="60.959999">GND</tspan></text>
       <text
          xml:space="preserve"
          style="font-weight:900;font-size:2.22394px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial Heavy';text-decoration-color:#000000;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.693998;stroke-linecap:round;stroke-linejoin:round"
-         x="59.725266"
-         y="67.308311"
+         x="52.572453"
+         y="67.106255"
          id="text21-5-6-0-4-3-9"><tspan
            sodipodi:role="line"
            id="tspan21-3-9-8-5-1-1"
            style="fill:#f9f9f9;stroke-width:0.693998"
-           x="59.725266"
-           y="67.308311">V+</tspan></text>
+           x="52.572453"
+           y="67.106255">V+</tspan></text>
     </g>
     <g
        id="g23"
@@ -1280,8 +1280,9 @@
        sodipodi:nodetypes="cc" />
     <path
        style="font-variation-settings:normal;display:inline;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
-       d="m 17.78,45.719996 h 20.319999 l 7.62,-7.619999 h 2.54"
-       id="path35-5" />
+       d="m 17.78,45.719996 12.88661,-0.02302 7.62,-7.619999 h 2.54"
+       id="path35-5"
+       sodipodi:nodetypes="cccc" />
     <path
        style="font-variation-settings:normal;display:inline;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
        d="m 66.040001,50.799997 v 2.54 H 78.74 v -5.08"
@@ -1320,8 +1321,9 @@
        transform="translate(-30.48,-27.94)" />
     <path
        style="font-variation-settings:normal;display:inline;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
-       d="m 12.7,40.639996 h 22.859999 l 7.62,-7.619999 4.893392,0.02302"
-       id="path34-8" />
+       d="m 12.7,40.639996 15.42661,-0.02302 7.62,-7.619999 4.893392,0.02302"
+       id="path34-8"
+       sodipodi:nodetypes="cccc" />
     <path
        style="font-variation-settings:normal;opacity:1;fill:none;fill-opacity:1;stroke:#5b5b5b;stroke-width:1.094;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
        d="M 43.18,116.84 V 63.499997"
@@ -1354,14 +1356,16 @@
        transform="translate(-30.48,-27.94)" />
     <path
        style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#5b5b5b;stroke-width:1.094;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
-       d="m 43.18,68.579996 h 22.859999 l 7.62,-7.619999 4.893392,0.02302"
+       d="m 43.18,68.579996 15.42661,-0.02302 7.62,-7.619999 4.893392,0.02302"
        id="path34"
-       transform="translate(-30.48,-27.94)" />
+       transform="translate(-30.48,-27.94)"
+       sodipodi:nodetypes="cccc" />
     <path
        style="font-variation-settings:normal;opacity:1;fill:none;fill-opacity:1;stroke:#ff0010;stroke-width:1.094;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 48.26,73.659996 h 20.319999 l 7.62,-7.619999 h 2.54"
+       d="m 48.26,73.659996 12.88661,-0.02302 7.62,-7.619999 h 2.54"
        id="path35"
-       transform="translate(-30.48,-27.94)" />
+       transform="translate(-30.48,-27.94)"
+       sodipodi:nodetypes="cccc" />
     <path
        style="font-variation-settings:normal;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.693999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
        d="m 96.520001,78.739997 v 2.54 H 109.22 v -5.08"
@@ -1426,6 +1430,35 @@
        cy="109.21999"
        r="0.90000004"
        transform="translate(-30.48,-27.94)" />
+    <text
+       xml:space="preserve"
+       style="font-weight:900;font-size:3.23527px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial Heavy';text-decoration-color:#000000;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="42.08115"
+       y="27.696531"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:1.7"
+         x="42.08115"
+         y="27.696531">PCA9685</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-weight:900;font-size:2.52013px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial Heavy';text-decoration-color:#000000;display:inline;fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;-inkscape-stroke:none"
+       x="21.172112"
+       y="95.846893"
+       id="text1-1"><tspan
+         sodipodi:role="line"
+         id="tspan1-7"
+         style="fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:1.7"
+         x="21.172112"
+         y="95.846893">WS28<tspan
+   style="fill:#808080"
+   id="tspan3">XX</tspan></tspan><tspan
+         sodipodi:role="line"
+         style="fill:#1a1a1a;fill-opacity:1;stroke:none;stroke-width:1.7"
+         x="21.172112"
+         y="98.997055"
+         id="tspan2">LED STRIP</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
