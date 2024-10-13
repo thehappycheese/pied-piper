@@ -47,14 +47,23 @@ pub fn play_music(
 ) {
     let mut state = MusicState::Stopped;
     // Try to secure an output stream
-    let (_stream, stream_handle) = match OutputStream::try_default() {
-        Ok(x) => x,
-        Err(_) => {
-            tx.send(MusicToMain::MusicError(MusicErrorType::NoOutputDevice))
-                .unwrap();
-            return;
-        }
-    };
+
+    let x;
+    loop{
+        match OutputStream::try_default() {
+            Ok(os) => {
+                x=os;
+                break;
+            },
+            Err(_) => {
+                tx.send(MusicToMain::MusicError(MusicErrorType::NoOutputDevice)).unwrap();
+                // empty the queue, ignore all messages
+                let _junk:Vec<_> = rx.try_iter().collect();
+                return;
+            }
+        };
+    }
+    let (_stream, stream_handle) = x;
     loop {
         match rx.recv_timeout(Duration::from_millis(500)) {
             Err(RecvTimeoutError::Disconnected) => {

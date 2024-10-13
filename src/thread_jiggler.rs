@@ -7,7 +7,18 @@ use std::thread;
 pub fn keep_speaker_awake() {
 
     // Get the default output stream
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+    let x;
+    loop{
+        if let Ok(os) = OutputStream::try_default(){
+            x = os;
+            break
+        }else{
+            // wait a while and try again?
+            println!("Failed to open output stream. Will try again in 5 seconds.");
+            thread::sleep(Duration::from_secs(5));
+        }
+    }
+    let (_stream, stream_handle) = x;
 
     loop {
         // Create a sink
