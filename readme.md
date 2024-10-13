@@ -12,9 +12,12 @@ The following shows the intended wiring for this project.
 
 ## Bluetooth Speaker or Other Default Audio Device
 
-It is expected that the PI is already configured to automatically connect with a bluetooth audio device or at least a default audio device is configured.
+It is expected that the PI is already configured to automatically connect with a
+bluetooth audio device or at least a default audio device is configured.
 
-A 1 second low-volume humming sound is played once every 120 seconds to keep the speaker awake.
+A one second low-volume humming sound is played once every 120 seconds to keep
+the speaker awake.
+
 
 ## Setup
 
@@ -30,13 +33,16 @@ sudo apt install libasound2-dev
 
 2. Enable both SPI and I2C
    - using `sudo raspi-config`
-   - or manually by editing `/boot/firmware/config.txt` by adding ur uncommenting (removing the `#`)
+   - or manually by editing `/boot/firmware/config.txt` by adding ur
+     uncommenting (removing the `#`)
      - `dtparam=i2c_arm=on` and
      - `dtparam=spi=on`
    - May need `sudo reboot` to take effect
-3. **If using bluetooth**: install pulse audio bluetooth `sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
+3. **If using bluetooth**: install pulse audio bluetooth
+   `sudo apt-get install pulseaudio pulseaudio-module-bluetooth`
   - May need `sudo reboot` to take effect
-  - Pair with device (See guide https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb)
+  - Pair with device (See guide
+    https://gist.github.com/actuino/9548329d1bba6663a63886067af5e4cb)
     - `bluetoothctl`
     - `power on`
     - `agent on`
@@ -45,7 +51,8 @@ sudo apt install libasound2-dev
       - Note it's address; the address should look like `6E:E9:B4:0D:0F:18`
     - `pair <device>`
       - Replace `<device>` with the address noted above
-      - **you only need to type the first few characters!**, then press tab to auto-complete the rest.
+      - **you only need to type the first few characters!**, then press tab to
+        auto-complete the rest.
     - `trust <device>`
       - Enables auto-connection
     - `connect <device>`
@@ -58,7 +65,8 @@ sudo apt install libasound2-dev
 sudo apt-get install git
 ```
 
-5. clone this respository, and change your terminal's current working directory into the repo:
+5. clone this repository, and change your terminal's current working directory
+   into the repo:
 
 ```bash
 git clone https://github.com/thehappycheese/pied-piper
@@ -77,13 +85,16 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 cargo build --release
 ```
 
+## Install using `systemd` to make it go on startup
+
 8. Install this project so that it runs on startup
 
 ```bash
 sudo python service_install.py
 ```
 
-9. If something goes wrong, there is are scripts to check the logs of the running service, and a script to uninstall it:
+9. If something goes wrong, there is are scripts to check the logs of the
+   running service, and a script to uninstall it:
 
 Check logs of running service:
 
@@ -103,9 +114,32 @@ Uninstall the service:
 sudo python service_uninstall.py
 ```
 
+
+## Auto-login
+
+To make bluetooth and pulse audio work on power-on, we will configure getty to make the system autologin;
+
+```bash
+sudo raspi-config
+```
+
+Select System Options > Boot / Auto Login > B2 Text Console, automatically logged in as...
+
+You can check it worked as follows;
+```
+cat /etc/systemd/system/getty@tty1.service.d/autologin.conf 
+```
+```ini
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin nick --noclear %I $TERM
+```
+
+
 ## Wifi Setup
 
-For deployment it is likely useful if the pi can connect to a hotspot so that it can be serviced once deployed.
+For deployment it is likely useful if the pi can connect to a hotspot so that it
+can be serviced once deployed.
 
 
 ```bash
