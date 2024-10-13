@@ -97,11 +97,13 @@ else:
 # Generate systemd unit file
 unit_file_content = f"""[Unit]
 Description={package_name} service
-After=network.target
+After=network.target bluetooth.target pulseaudio.service
+Requires=bluetooth.target pulseaudio.service
 
 [Service]
 User={current_user}
 Environment=XDG_RUNTIME_DIR=/run/user/{user_uid}
+ExecStartPre=/bin/sleep 10
 ExecStart={installed_dir / executable_name}
 WorkingDirectory={installed_dir}
 Restart=always
