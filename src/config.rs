@@ -7,11 +7,23 @@ use std::path::Path;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct PiperConfig {
+
+    /// Location of music file to play
     pub music_file_location: String,
+
+    /// Settings when door is moving back and fourth
     pub alternation_settings: AlternatingSettings,
+
+    /// Door open fraction. Can be 0.0 or 1.0. Swap with `closed_fraction` to reverse.
     pub open_fraction: f32,
+
+    /// Door closed fraction. Can be 0.0 or 1.0. Swap with `open_fraction`` to reverse.
     pub closed_fraction: f32,
-    pub idle_trigger_minutes: f32, // in minutes
+
+    /// set to 0.0 to mean never. otherwise this is the number of minutes before auto-triggering
+    pub idle_trigger_minutes: f32,
+
+    /// set ot 0.5 to reduce the brightness of the LEDs to 50%
     pub brightness_factor:f32,
 }
 
@@ -22,7 +34,7 @@ impl Default for PiperConfig {
             alternation_settings: AlternatingSettings::default(),
             open_fraction: 1.0,
             closed_fraction: 0.0,
-            idle_trigger_minutes: 10.0,
+            idle_trigger_minutes: 0.0,
             brightness_factor:1.0,
         }
     }

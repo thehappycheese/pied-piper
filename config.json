@@ -7,6 +7,6 @@
   },
   "open_fraction": 1.0,
   "closed_fraction": 0.0,
-  "idle_trigger_minutes": 10.0,
+  "idle_trigger_minutes": 0.0,
   "brightness_factor": 1.0
 }
