@@ -17,14 +17,14 @@ pub fn poll_button(
     let pin = gpio
         .get(pin_number)
         .expect("Failed to get GPIO pin")
-        .into_input_pulldown();
+        .into_input_pullup();
 
     let mut last_press_time = Instant::now();
 
     loop {
-        if pin.is_high() {
+        if pin.is_low() {
             thread::sleep(Duration::from_millis(5));
-            if pin.is_high() {
+            if pin.is_low() {
                 println!("Button Pressed!");
                 tx.send(ButtonToMain::Pressed).unwrap();
                 last_press_time = Instant::now();
