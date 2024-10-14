@@ -128,19 +128,6 @@ except Exception as e:
     print(f"Error writing unit file: {e}", file=sys.stderr)
     sys.exit(1)
 
-# Set correct permissions for the installed directory
-try:
-    shutil.chown(installed_dir, user=current_user, group=current_user)
-    for root, dirs, files in os.walk(installed_dir):
-        for momo in dirs:
-            shutil.chown(Path(root) / momo, user=current_user, group=current_user)
-        for momo in files:
-            shutil.chown(Path(root) / momo, user=current_user, group=current_user)
-    print(f"Set correct permissions for {installed_dir}")
-except Exception as e:
-    print(f"Error setting permissions: {e}", file=sys.stderr)
-    sys.exit(1)
-
 # Reload the systemd daemon to recognize the new service
 try:
     subprocess.run(['systemctl', 'daemon-reload'], check=True)
