@@ -12,6 +12,7 @@ pub struct PiperConfig {
     pub open_fraction: f32,
     pub closed_fraction: f32,
     pub idle_trigger_minutes: f32, // in minutes
+    pub brightness_factor:f32,
 }
 
 impl Default for PiperConfig {
@@ -21,7 +22,8 @@ impl Default for PiperConfig {
             alternation_settings: AlternatingSettings::default(),
             open_fraction: 1.0,
             closed_fraction: 0.0,
-            idle_trigger_minutes: 10.0
+            idle_trigger_minutes: 10.0,
+            brightness_factor:1.0,
         }
     }
 }

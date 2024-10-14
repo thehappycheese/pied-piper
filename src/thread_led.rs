@@ -1,17 +1,19 @@
 use ws2818_rgb_led_spi_driver::adapter_gen::WS28xxAdapter;
 use ws2818_rgb_led_spi_driver::adapter_spi::WS28xxSpiAdapter;
 use rand::Rng;
-use std::{thread, time::Duration};
+use std::{sync::Arc, thread, time::Duration};
+
+use crate::config::PiperConfig;
 
 
 const NUM_LEDS: usize = 10; // Adjust this to the number of LEDs you have
 
 
-pub fn generate_random_fire_color<R: Rng + ?Sized>(rng: &mut R) -> (u8, u8, u8) {
-    let red = rng.gen_range(150..=200);
-    let green = (((red as f32)*0.2) as i8) + rng.gen_range(-20..=10);
-    let blue = rng.gen_range(0..=2);
-    (red, green as u8, blue)
+pub fn generate_random_fire_color<R: Rng + ?Sized>(rng: &mut R, brightness:f32) -> (u8, u8, u8) {
+    let red:f32 = rng.gen_range(150..=200) as f32;
+    let green:f32 = red*0.2f32 + rng.gen_range(-20..=10) as f32;
+    let blue:f32 = rng.gen_range(0..=2) as f32;
+    ((red*brightness) as u8, (green as f32*brightness) as u8, (blue*brightness) as u8)
 }
 
 pub fn interpolate_color(start: (u8, u8, u8), end: (u8, u8, u8), t: f32) -> (u8, u8, u8) {
@@ -45,7 +47,7 @@ struct LedState {
 }
 
 
-pub fn run_leds(){
+pub fn run_leds(config:Arc<PiperConfig>){
     let mut adapter = WS28xxSpiAdapter::new("/dev/spidev0.0").unwrap();
     let mut rng = rand::thread_rng();
 
@@ -53,8 +55,8 @@ pub fn run_leds(){
     let mut led_states = Vec::with_capacity(NUM_LEDS);
 
     for _ in 0..NUM_LEDS {
-        let initial_color = generate_random_fire_color(&mut rng);
-        let target_color = generate_random_fire_color(&mut rng);
+        let initial_color = generate_random_fire_color(&mut rng, config.brightness_factor);
+        let target_color = generate_random_fire_color(&mut rng, config.brightness_factor);
         let ticks_to_next_target = rng.gen_range(5..=20);
         led_states.push(LedState {
             current_color: initial_color,
@@ -81,7 +83,7 @@ pub fn run_leds(){
             // If we've reached the target, set up a new target
             if led.ticks_since_last_target >= led.ticks_to_next_target {
                 led.current_color = led.target_color;
-                led.target_color = generate_random_fire_color(&mut rng);
+                led.target_color = generate_random_fire_color(&mut rng, config.brightness_factor);
                 led.ticks_since_last_target = 0;
                 led.ticks_to_next_target = rng.gen_range(10..=15);
             }

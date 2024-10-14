@@ -33,7 +33,10 @@ fn main() {
     let (tx_music, main_recv_music) = channel();
     let (tx_servo, rx_servo) = channel();
     
-    let _thread_run_leds = thread::spawn(run_leds);
+    let _thread_run_leds = thread::spawn({
+        let config = config.clone();
+        move || run_leds(config)
+    });
     let _thread_noise = thread::spawn(keep_speaker_awake);
 
     let _thread_play_music = thread::spawn({
