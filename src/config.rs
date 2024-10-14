@@ -34,7 +34,7 @@ impl Default for PiperConfig {
             alternation_settings: AlternatingSettings::default(),
             open_fraction: 1.0,
             closed_fraction: 0.0,
-            idle_trigger_minutes: 0.0,
+            idle_trigger_minutes: 30.0,
             brightness_factor:1.0,
         }
     }
