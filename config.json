@@ -2,10 +2,11 @@
   "music_file_location": "./music/pied piper 3.mp3",
   "alternation_settings": {
     "open_pause_seconds": 2.0,
-    "closed_pause_seconds": 3.0
+    "closed_pause_seconds": 3.0,
+    "drive_time_seconds": 0.1
   },
   "open_fraction": 1.0,
   "closed_fraction": 0.0,
   "idle_trigger_minutes": 10.0,
-  "brightness_factor": 0.3
+  "brightness_factor": 1.0
 }

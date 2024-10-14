@@ -10,17 +10,27 @@ use crate::{
     pca9685::{ServoAction::*, ServoInstruction, ServoNumber::*, PCA9685},
 };
 
+
+/// Open and close the door, coasting at the endpoints.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct AlternatingSettings {
-    
+    /// Delay while door is open
     pub open_pause_seconds: f32,
+    
+    /// Delay while door is closed
     pub closed_pause_seconds: f32,
+    
+    /// Time for which to send signal. Only needs to be very small,
+    /// since most servos will drive to the last known destination
+    /// if they stop receiving PWM signal rather than immediately switching to coast.
+    pub drive_time_seconds: f32,
 }
 impl Default for AlternatingSettings {
     fn default() -> Self {
         AlternatingSettings {
             open_pause_seconds: 2.0,
             closed_pause_seconds: 3.0,
+            drive_time_seconds: 0.1,
         }
     }
 }
@@ -109,17 +119,21 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
             Err(RecvTimeoutError::Timeout) => {
                 match &mut state {
                     State::Alternating(AlternatingState {
-                        settings,
+                        settings: AlternatingSettings{
+                            open_pause_seconds,
+                            closed_pause_seconds,
+                            drive_time_seconds
+                        },
                         last_toggle,
                         is_open,
                     }) => {
                         let now = Instant::now();
                         let duration = if *is_open {
-                            Duration::from_secs_f32(settings.open_pause_seconds)
+                            Duration::from_secs_f32(*open_pause_seconds)
                         } else {
-                            Duration::from_secs_f32(settings.closed_pause_seconds)
+                            Duration::from_secs_f32(*closed_pause_seconds)
                         };
-                        if now.duration_since(*last_toggle) >= duration {
+                        if now.duration_since(*last_toggle) > duration {
                             // Toggle servo position
                             *is_open = !*is_open;
                             let fraction = if *is_open {
@@ -133,6 +147,11 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
                             })
                             .unwrap();
                             *last_toggle = now;
+                        } else if now.duration_since(*last_toggle) > Duration::from_secs_f32(*drive_time_seconds) {
+                            p.send(ServoInstruction{
+                                servo_number: S0,
+                                action: Coast
+                            }).unwrap();
                         }
                     }
                     _ => {}
