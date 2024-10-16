@@ -25,6 +25,9 @@ pub struct PiperConfig {
 
     /// set ot 0.5 to reduce the brightness of the LEDs to 50%
     pub brightness_factor:f32,
+
+    /// time to play music for
+    pub duration_to_play_seconds:f32
 }
 
 impl Default for PiperConfig {
@@ -36,6 +39,7 @@ impl Default for PiperConfig {
             closed_fraction: 0.0,
             idle_trigger_minutes: 30.0,
             brightness_factor:1.0,
+            duration_to_play_seconds:18.0,
         }
     }
 }

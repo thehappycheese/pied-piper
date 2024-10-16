@@ -89,7 +89,8 @@ fn performance(
     loop{
         match rx_music.recv_timeout(Duration::from_millis(100)) {
             Ok(MusicToMain::StartedPlaying)=>{
-                tx_servo.send(MainToServo::Alternate(config.alternation_settings.clone())).unwrap();
+                //tx_servo.send(MainToServo::Alternate(config.alternation_settings.clone())).unwrap();
+                tx_servo.send(MainToServo::Open).unwrap();
             }
             Ok(MusicToMain::StoppedPlaying)=>{
                 tx_servo.send(MainToServo::Close).unwrap();

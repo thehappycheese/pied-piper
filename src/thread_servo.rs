@@ -40,7 +40,7 @@ pub enum MainToServo {
     Alternate(AlternatingSettings),
     //Neutral,
     Close,
-    //Open,
+    Open,
     Coast,
 }
 
@@ -105,17 +105,14 @@ pub fn run_servos(rx: Receiver<MainToServo>, config:Arc<PiperConfig>,) {
                 .unwrap();
                 state = State::Polling;
             }
-            // Ok(MainToServo::Open) => {
-            //     p.send(ServoInstruction {
-            //         servo_number: S0,
-            //         action: Position {
-            //             value: 1.0,
-            //             invert: config.invert,
-            //         },
-            //     })
-            //     .unwrap();
-            //     state = State::Polling;
-            // }
+            Ok(MainToServo::Open) => {
+                p.send(ServoInstruction {
+                    servo_number: S0,
+                    action: Position (config.open_fraction)
+                })
+                .unwrap();
+                state = State::Polling;
+            }
             Err(RecvTimeoutError::Timeout) => {
                 match &mut state {
                     State::Alternating(AlternatingState {

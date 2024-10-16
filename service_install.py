@@ -97,8 +97,6 @@ else:
 # Generate systemd unit file
 unit_file_content = f"""[Unit]
 Description={package_name} service
-After=network.target bluetooth.target pulseaudio.service
-Requires=bluetooth.target pulseaudio.service
 
 [Service]
 User={current_user}

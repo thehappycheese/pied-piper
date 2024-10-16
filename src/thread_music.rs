@@ -115,7 +115,7 @@ pub fn play_music(
 
                     let source: SamplesConverter<Decoder<BufReader<File>>, f32> =
                         decoder.convert_samples();
-
+                    let source = source.take_duration(Duration::from_secs_f32(config.duration_to_play_seconds));
                     let sink = match Sink::try_new(&stream_handle) {
                         Ok(s) => s,
                         Err(_) => {

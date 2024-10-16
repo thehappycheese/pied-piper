@@ -5,8 +5,9 @@
     "closed_pause_seconds": 3.0,
     "drive_time_seconds": 0.1
   },
-  "open_fraction": 1.0,
-  "closed_fraction": 0.0,
-  "idle_trigger_minutes": 30.0,
-  "brightness_factor": 1.0
+  "open_fraction": 0.3,
+  "closed_fraction": 0.7,
+  "idle_trigger_minutes": 15.0,
+  "brightness_factor": 0.9,
+  "duration_to_play_seconds": 18.0
 }
