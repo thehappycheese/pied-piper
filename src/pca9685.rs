@@ -116,8 +116,9 @@ impl PCA9685 {
                     self.set_pwm_full_off(servo_number as u8)
                 }else{
                     let position = position.clamp(0.0, 1.0);
-                    let pulse_length = 0.05 + 0.05 * position;
-                    let pulse = (pulse_length * 4096.0).round() as u16;
+                    let pulse_length_seconds = 0.000_9 + 0.001_2 * position;
+                    
+                    let pulse = (pulse_length_seconds / 0.020 * 4096.0).round() as u16;
                     self.set_pwm(servo_number as u8, 0, pulse)
                 }
             }
